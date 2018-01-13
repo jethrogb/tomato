@@ -7,7 +7,9 @@
 #	!!TB - Added version suffix
 #
 
-use POSIX qw(strftime);
+use POSIX qw(strftime locale_h);
+
+setlocale(LC_ALL, "C");
 
 sub error
 {
