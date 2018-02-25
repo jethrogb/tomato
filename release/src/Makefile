@@ -744,26 +744,12 @@ define BusyboxOptions
 	fi; \
 	if [ "$(USB)" = "USB" ]; then \
 		if [ "$(USBEXTRAS)" = "y" ]; then \
-			sed -i "/CONFIG_E2FSCK/d" $(1); \
-			echo "CONFIG_E2FSCK=y" >>$(1); \
-			sed -i "/CONFIG_MKE2FS/d" $(1); \
-			echo "CONFIG_MKE2FS=y" >>$(1); \
-			sed -i "/CONFIG_FDISK/d" $(1); \
-			echo "CONFIG_FDISK=y" >>$(1); \
-			sed -i "/CONFIG_FEATURE_FDISK_WRITABLE/d" $(1); \
-			echo "CONFIG_FEATURE_FDISK_WRITABLE=y" >>$(1); \
-			sed -i "/CONFIG_MKFS_VFAT/d" $(1); \
-			echo "CONFIG_MKFS_VFAT=y" >>$(1); \
-			sed -i "/CONFIG_MKSWAP/d" $(1); \
-			echo "CONFIG_MKSWAP=y" >>$(1); \
 			sed -i "/CONFIG_FLOCK/d" $(1); \
 			echo "CONFIG_FLOCK=y" >>$(1); \
 			sed -i "/CONFIG_FSYNC/d" $(1); \
 			echo "CONFIG_FSYNC=y" >>$(1); \
-			sed -i "/CONFIG_TUNE2FS/d" $(1); \
-			echo "CONFIG_TUNE2FS=y" >>$(1); \
-			sed -i "/CONFIG_E2LABEL/d" $(1); \
-			echo "CONFIG_E2LABEL=y" >>$(1); \
+			sed -i "/CONFIG_LSPCI/d" $(1); \
+			echo "CONFIG_LSPCI=y" >>$(1); \
 			if [ "$(CONFIG_LINUX26)" = "y" ]; then \
 				sed -i "/CONFIG_LSUSB/d" $(1); \
 				echo "CONFIG_LSUSB=y" >>$(1); \

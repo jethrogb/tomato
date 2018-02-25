@@ -133,7 +133,7 @@ endif
 endif
 
 STATIC6_LIBS += libiptc/libip6tc.a
-LDLIBS       += -L. -liptc
+STATIC_LIBS += libiptc/libiptc.a
 
 .PHONY: default
 default: libiptc.so all
@@ -150,7 +150,6 @@ libiptc.so: libiptc/libiptc.a
 
 
 ifeq ($(DO_MULTI), 1)
-
 ifeq ($(DO_SAVE), 1)
 iptables: iptables-multi.c iptables-save.c iptables-restore.c iptables-standalone.c iptables.o $(STATIC_LIBS)
 	$(CC) $(CFLAGS) -DIPTABLES_MULTI -DIPTABLES_SAVE -DIPT_LIB_DIR=\"$(IPT_LIBDIR)\" $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -158,10 +157,6 @@ else
 iptables: iptables-multi.c iptables-restore.c iptables-standalone.c iptables.o $(STATIC_LIBS)
 	$(CC) $(CFLAGS) -DIPTABLES_MULTI -DIPT_LIB_DIR=\"$(IPT_LIBDIR)\" $(LDFLAGS) -o $@ $^ $(LDLIBS)
 endif
-
-#	iptables: iptables-multi.c iptables-save.c iptables-restore.c iptables-xml.c iptables-standalone.c iptables.o $(STATIC_LIBS)
-#		$(CC) $(CFLAGS) -DIPTABLES_MULTI -DIPT_LIB_DIR=\"$(IPT_LIBDIR)\" $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
 else
 iptables: iptables-standalone.c iptables.o $(STATIC_LIBS)
 	$(CC) $(CFLAGS) -DIPT_LIB_DIR=\"$(IPT_LIBDIR)\" $(LDFLAGS) -o $@ $^ $(LDLIBS)

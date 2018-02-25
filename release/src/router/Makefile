@@ -21,7 +21,7 @@ export PARALLEL_BUILD := -j`grep -c '^processor' /proc/cpuinfo`
 #
 #
 SEP=`$(eval progress=$(shell echo $$(($(progress)+1))))` \
-echo "\033[41;1m   $@ ${progress}$\/${totalSteps} \033[0m\033]2;$@ ${progress}$\/${totalSteps}\007"
+echo -e "\033[41;1m   $@ ${progress}$\/${totalSteps} \033[0m\033]2;$@ ${progress}$\/${totalSteps}\007"
 
 
 #
@@ -181,7 +181,7 @@ MEDIA_SERVER_STATIC=y
 #MEDIA_SERVER_STATIC :=
 
 #obj-y += libnfnetlink
-obj-y += miniupnpd
+#obj-y += miniupnpd
 #	obj-y += upnp
 obj-$(CONFIG_LINUX26) += ipset
 
@@ -812,7 +812,7 @@ openssl-install: openssl
 
 mssl:	$(if $(FULL_OPENSSL),openssl,cyassl)
 
-mdu:	shared mssl
+mdu:	shared mssl nvram
 
 rc: nvram shared
 
@@ -897,11 +897,8 @@ iptables-install:
 	install -d $(INSTALLDIR)/iptables/usr/lib/iptables
 	install -D iptables/extensions/*.so $(INSTALLDIR)/iptables/usr/lib/iptables/
 
-	install -D iptables/libiptc.so $(INSTALLDIR)/iptables/usr/lib/libiptc.so
-
 	$(STRIP) $(INSTALLDIR)/iptables/usr/sbin/iptables
 	$(STRIP) $(INSTALLDIR)/iptables/usr/lib/iptables/*.so
-	$(STRIP) $(INSTALLDIR)/iptables/usr/lib/libiptc.so
 
 ifeq ($(TCONFIG_IPV6),y)
 	install iptables/ip6tables $(INSTALLDIR)/iptables/usr/sbin/ip6tables
@@ -1142,7 +1139,7 @@ samba3:
 
 nvram: shared
 
-prebuilt: shared libbcmcrypto
+prebuilt: shared libbcmcrypto nvram
 
 vlan:
 	@$(SEP)
@@ -2124,6 +2121,7 @@ openvpn/.conf: openssl lzo
 	--with-crypto-library=openssl \
 	--disable-debug --disable-plugin-auth-pam --disable-plugin-down-root --with-plugindir=/lib --enable-management --disable-small \
 	--disable-selinux --disable-socks \
+	--enable-iproute2 IPROUTE=/usr/sbin/ip \
 	OPENSSL_SSL_CFLAGS="-I$(TOP)/openssl/include" \
 	OPENSSL_SSL_LIBS="-L$(TOP)/openssl -lssl" \
 	ac_cv_lib_resolv_gethostbyname=no
@@ -2330,7 +2328,6 @@ libnfsidmap-install: libnfsidmap
 	$(MAKE) -C libnfsidmap DESTDIR=$(TOP)/libnfsidmap/staged install
 
 portmap/stamp-h1:
-	cd portmap \
 	CFLAGS="-Os -Wall $(EXTRACFLAGS)" \
 	$(MAKE) -C portmap CC=$(CC) AR=$(AR) LD=$(LD) RANLIB=$(RANLIB) RPCUSER="nobody"
 	touch portmap/stamp-h1
@@ -2435,7 +2432,6 @@ tinc-install:
 	$(STRIP) $(INSTALLDIR)/tinc/usr/sbin/tincd
 
 sd-idle/stamp-h1:
-	cd sd-idle \
 	CFLAGS="-Os -Wall --host=mipsel-linux --target=mipsel-linux $(EXTRACFLAGS)" \
 	$(MAKE) -C sd-idle
 	chmod 0755 sd-idle/sd-idle
@@ -2643,6 +2639,14 @@ comgt-install: comgt
 
 comgt-clean:
 	-@$(MAKE) -C comgt clean
+
+cstats: nvram
+
+et: nvram
+
+rstats: nvram
+
+wlconf: nvram
 
 #
 # Generic rules
